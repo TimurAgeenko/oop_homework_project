@@ -4,7 +4,7 @@ from src.models import Category, Product
 
 
 def get_classes_from_data(path: str = "../data/products.json") -> list:
-    """Функция для создания классов из JSON файла. Возвращает список категорий с продуктами."""
+    """Функция для создания классов из JSON файла. Возвращает список объектов класса 'Category'."""
     with open(path, "r", encoding="utf-8") as file:
         data = json.load(file)
 
