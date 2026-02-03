@@ -7,8 +7,42 @@ class Product:
     def __init__(self, name: str, description: str, price: float, quantity: int):
         self.name = name
         self.description = description
-        self.price = price
+        self.__price = price
         self.quantity = quantity
+
+    @classmethod
+    def new_product(cls, product_info: dict, products: Optional[list] = None):
+        """Класс-метод для создания нового продукта из словаря."""
+        name = product_info.get("name")
+        description = product_info.get("description")
+        price = product_info.get("price")
+        quantity = product_info.get("quantity")
+
+        if products:
+            for product in products:
+                if product.name == name:
+                    quantity += product.quantity
+                    price = max(price, product.price)
+
+        return cls(name, description, price, quantity)
+
+    @property
+    def price(self) -> float:
+        """Свойство для получения цены продукта."""
+        return self.__price
+
+    @price.setter
+    def price(self, new_price: float):
+        """Сеттер для установки новой цены продукта с проверкой на отрицательное значение."""
+        if new_price <= 0:
+            print("Цена не должна быть нулевая или отрицательная")
+        elif new_price < self.price:
+            print("Вы уверены, что хотите снизить цену? y/n")
+            user_answer = input().lower()
+            if user_answer == "y":
+                self.__price = new_price
+        else:
+            self.__price = new_price
 
 
 class Category:
@@ -20,7 +54,20 @@ class Category:
     def __init__(self, name: str, description: str, products: Optional[list] = None):
         self.name = name
         self.description = description
-        self.products = products if products else []
+        self.__products = products if products else []
 
         Category.categories_amount += 1
-        Category.products_amount += sum([product.quantity for product in self.products])
+        Category.products_amount += sum([product.quantity for product in self.__products])
+
+    def add_product(self, product: Product):
+        """Метод для добавления продукта в категорию."""
+        self.__products.append(product)
+        Category.products_amount += product.quantity
+
+    @property
+    def products(self) -> str:
+        """Свойство для получения продуктов в категории в виде строки."""
+        products = ""
+        for product in self.__products:
+            products += f"{product.name}, {product.price} руб. Остаток: {product.quantity} шт.\n"
+        return products
