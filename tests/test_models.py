@@ -1,3 +1,6 @@
+from src.models import Product
+
+
 def test_product_initialization(product):
     assert product.name == "Laptop"
     assert product.description == "A high-end gaming laptop"
@@ -5,12 +8,41 @@ def test_product_initialization(product):
     assert product.quantity == 10
 
 
+def test_new_product():
+    product_info = {"name": "Smartphone", "description": "Latest model smartphone", "price": 70000.00, "quantity": 15}
+    new_product = Product.new_product(product_info)
+    assert new_product.name == "Smartphone"
+    assert new_product.description == "Latest model smartphone"
+    assert new_product.price == 70000.00
+    assert new_product.quantity == 15
+
+    products = [
+        Product("Laptop", "A high-end gaming laptop", 50000.00, 10),
+        Product("Mouse", "Wireless mouse", 3000.00, 50),
+    ]
+
+    product_info = {"name": "Laptop", "description": "A high-end gaming laptop", "price": 70000.00, "quantity": 15}
+    new_product = Product.new_product(product_info, products)
+    assert new_product.name == "Laptop"
+    assert new_product.description == "A high-end gaming laptop"
+    assert new_product.price == 70000.00
+    assert new_product.quantity == 25
+
+
+def test_price_setter(product, capsys):
+    assert product.price == 50000.00
+    product.price = 60000.00
+    assert product.price == 60000.00
+
+    product.price = -100.00
+    captured = capsys.readouterr()
+    assert captured.out == "Цена не должна быть нулевая или отрицательная\n"
+
+
 def test_category_initialization(category):
     assert category.name == "Electronics"
     assert category.description == "Electronic gadgets and devices"
-    assert len(category.products) == 2
-    assert category.products[0].name == "Laptop"
-    assert category.products[1].name == "Mouse"
+    assert category.products == "Laptop, 50000.0 руб. Остаток: 10 шт.\nMouse, 3000.0 руб. Остаток: 50 шт.\n"
 
 
 def test_products_amount(category):
@@ -19,3 +51,14 @@ def test_products_amount(category):
 
 def test_categories_amount(category):
     assert category.categories_amount == 1
+
+
+def test_add_product(category):
+    new_product = Product("Keyboard", "Mechanical keyboard", 7000.00, 20)
+    category.add_product(new_product)
+    assert category.products == (
+        "Laptop, 50000.0 руб. Остаток: 10 шт.\n"
+        "Mouse, 3000.0 руб. Остаток: 50 шт.\n"
+        "Keyboard, 7000.0 руб. Остаток: 20 шт.\n"
+    )
+    assert category.products_amount == 80
