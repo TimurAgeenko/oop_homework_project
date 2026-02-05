@@ -1,4 +1,4 @@
-from src.models import Product
+from src.models import Product, CategoryIterator
 
 
 def test_product_initialization(product):
@@ -39,6 +39,16 @@ def test_price_setter(product, capsys):
     assert captured.out == "Цена не должна быть нулевая или отрицательная\n"
 
 
+def test_str_product(product):
+    assert str(product) == "Laptop, 50000.0 руб. Остаток: 10 шт."
+
+
+def test_add_product(product):
+    another_product = Product("Mouse", "Wireless mouse", 3000.00, 50)
+    total_price = product + another_product
+    assert total_price == 650000.0
+
+
 def test_category_initialization(category):
     assert category.name == "Electronics"
     assert category.description == "Electronic gadgets and devices"
@@ -53,7 +63,7 @@ def test_categories_amount(category):
     assert category.categories_amount == 1
 
 
-def test_add_product(category):
+def test_add_product_category(category):
     new_product = Product("Keyboard", "Mechanical keyboard", 7000.00, 20)
     category.add_product(new_product)
     assert category.products == (
@@ -62,3 +72,22 @@ def test_add_product(category):
         "Keyboard, 7000.0 руб. Остаток: 20 шт.\n"
     )
     assert category.products_amount == 80
+
+
+def test_str_category(category):
+    assert str(category) == "Electronics, количество: 60 шт."
+
+
+def test_products_list(category):
+    products_list = category.products_list
+    assert len(products_list) == 2
+    assert products_list[0].name == "Laptop"
+    assert products_list[1].name == "Mouse"
+
+
+def test_category_iterator(category):
+    category_iterator = CategoryIterator(category)
+    product_1 = next(category_iterator)
+    assert product_1.name == "Laptop"
+    product_2 = next(category_iterator)
+    assert product_2.name == "Mouse"
