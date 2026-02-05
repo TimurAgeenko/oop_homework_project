@@ -1,4 +1,4 @@
-from src.models import Product, CategoryIterator
+from src.models import CategoryIterator, Product
 
 
 def test_product_initialization(product):

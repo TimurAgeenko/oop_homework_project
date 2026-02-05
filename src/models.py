@@ -11,7 +11,7 @@ class Product:
         self.quantity = quantity
 
     def __str__(self) -> str:
-        return f'{self.name}, {self.price} руб. Остаток: {self.quantity} шт.'
+        return f"{self.name}, {self.price} руб. Остаток: {self.quantity} шт."
 
     def __add__(self, other):
         if isinstance(other, Product):
@@ -68,7 +68,7 @@ class Category:
         Category.products_amount += sum([product.quantity for product in self.__products])
 
     def __str__(self) -> str:
-        return f'{self.name}, количество: {self.products_amount} шт.'
+        return f"{self.name}, количество: {self.products_amount} шт."
 
     def add_product(self, product: Product):
         """Метод для добавления продукта в категорию."""
