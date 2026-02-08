@@ -14,9 +14,9 @@ class Product:
         return f"{self.name}, {self.price} руб. Остаток: {self.quantity} шт."
 
     def __add__(self, other):
-        if isinstance(other, Product):
-            return self.quantity * self.price + other.quantity * other.price
-        return NotImplemented
+        if not isinstance(other, type(self)):
+            raise TypeError("Сложение возможно только между продуктами одного типа")
+        return self.quantity * self.price + other.quantity * other.price
 
     @classmethod
     def new_product(cls, product_info: dict, products: Optional[list] = None):
@@ -72,6 +72,8 @@ class Category:
 
     def add_product(self, product: Product):
         """Метод для добавления продукта в категорию."""
+        if not isinstance(product, Product):
+            raise TypeError("В категорию можно добавлять только объекты класса Product или его наследников")
         self.__products.append(product)
         Category.products_amount += product.quantity
 

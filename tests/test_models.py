@@ -1,3 +1,4 @@
+import pytest
 from src.models import CategoryIterator, Product
 
 
@@ -49,6 +50,14 @@ def test_add_product(product):
     assert total_price == 650000.0
 
 
+def test_add_product_invalid_type(smartphone, grass):
+    with pytest.raises(TypeError) as exc_info:
+        smartphone + grass
+
+    assert str(exc_info.value) == "Сложение возможно только между продуктами одного типа"
+
+
+
 def test_category_initialization(category):
     assert category.name == "Electronics"
     assert category.description == "Electronic gadgets and devices"
@@ -74,6 +83,13 @@ def test_add_product_category(category):
     assert category.products_amount == 80
 
 
+def test_add_product_category_invalid_type(category):
+    with pytest.raises(TypeError) as exc_info:
+        category.add_product("Not a product")
+
+    assert str(exc_info.value) == "В категорию можно добавлять только объекты класса Product или его наследников"
+
+
 def test_str_category(category):
     assert str(category) == "Electronics, количество: 60 шт."
 
@@ -91,3 +107,24 @@ def test_category_iterator(category):
     assert product_1.name == "Laptop"
     product_2 = next(category_iterator)
     assert product_2.name == "Mouse"
+
+
+def test_smartphone_initialization(smartphone):
+    assert smartphone.name == "Samsung Galaxy S23 Ultra"
+    assert smartphone.description == "256GB, Серый цвет, 200MP камера"
+    assert smartphone.price == 180000.0
+    assert smartphone.quantity == 5
+    assert smartphone.efficiency == 95.5
+    assert smartphone.model == "S23 Ultra"
+    assert smartphone.memory == 256
+    assert smartphone.color == "Серый"
+
+
+def test_lawn_grass_initialization(grass):
+    assert grass.name == "Газонная трава"
+    assert grass.description == "Элитная трава для газона"
+    assert grass.price == 500.0
+    assert grass.quantity == 20
+    assert grass.country == "Россия"
+    assert grass.germination_period == "7 дней"
+    assert grass.color == "Зеленый"
