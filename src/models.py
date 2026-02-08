@@ -10,6 +10,14 @@ class Product:
         self.__price = price
         self.quantity = quantity
 
+    def __str__(self) -> str:
+        return f"{self.name}, {self.price} руб. Остаток: {self.quantity} шт."
+
+    def __add__(self, other):
+        if isinstance(other, Product):
+            return self.quantity * self.price + other.quantity * other.price
+        return NotImplemented
+
     @classmethod
     def new_product(cls, product_info: dict, products: Optional[list] = None):
         """Класс-метод для создания нового продукта из словаря."""
@@ -59,6 +67,9 @@ class Category:
         Category.categories_amount += 1
         Category.products_amount += sum([product.quantity for product in self.__products])
 
+    def __str__(self) -> str:
+        return f"{self.name}, количество: {self.products_amount} шт."
+
     def add_product(self, product: Product):
         """Метод для добавления продукта в категорию."""
         self.__products.append(product)
@@ -69,5 +80,28 @@ class Category:
         """Свойство для получения продуктов в категории в виде строки."""
         products = ""
         for product in self.__products:
-            products += f"{product.name}, {product.price} руб. Остаток: {product.quantity} шт.\n"
+            products += str(product) + "\n"
         return products
+
+    @property
+    def products_list(self) -> list:
+        """Свойство для получения списка продуктов в категории."""
+        return self.__products
+
+
+class CategoryIterator:
+    """Итератор для перебора продуктов в категории."""
+
+    def __init__(self, category: Category):
+        self.category = category
+        self.index = -1
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        if self.index < len(self.category.products_list) - 1:
+            self.index += 1
+            return self.category.products_list[self.index]
+        else:
+            raise StopIteration
