@@ -1,4 +1,5 @@
 import pytest
+
 from src.models import CategoryIterator, Product
 
 
@@ -55,7 +56,6 @@ def test_add_product_invalid_type(smartphone, grass):
         smartphone + grass
 
     assert str(exc_info.value) == "Сложение возможно только между продуктами одного типа"
-
 
 
 def test_category_initialization(category):
