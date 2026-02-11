@@ -14,7 +14,17 @@ class BaseProduct(ABC):
         pass
 
 
-class Product(BaseProduct):
+class MixinLogger:
+    """Миксин для вывода в консоль информации о продукте."""
+
+    def __init__(self):
+        print(repr(self))
+
+    def __repr__(self):
+        return f"{self.__class__.__name__}('{self.name}', '{self.description}', {self.price}, {self.quantity})"
+
+
+class Product(MixinLogger, BaseProduct):
     """Класс, представляющий продукт."""
 
     def __init__(self, name: str, description: str, price: float, quantity: int):
@@ -22,6 +32,7 @@ class Product(BaseProduct):
         self.description = description
         self.__price = price
         self.quantity = quantity
+        super().__init__()
 
     def __str__(self) -> str:
         return f"{self.name}, {self.price} руб. Остаток: {self.quantity} шт."
