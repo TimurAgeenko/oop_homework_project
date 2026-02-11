@@ -14,9 +14,9 @@ class Product:
         return f"{self.name}, {self.price} руб. Остаток: {self.quantity} шт."
 
     def __add__(self, other):
-        if isinstance(other, Product):
-            return self.quantity * self.price + other.quantity * other.price
-        return NotImplemented
+        if not isinstance(other, type(self)):
+            raise TypeError("Сложение возможно только между продуктами одного типа")
+        return self.quantity * self.price + other.quantity * other.price
 
     @classmethod
     def new_product(cls, product_info: dict, products: Optional[list] = None):
@@ -72,6 +72,8 @@ class Category:
 
     def add_product(self, product: Product):
         """Метод для добавления продукта в категорию."""
+        if not isinstance(product, Product):
+            raise TypeError("В категорию можно добавлять только объекты класса Product или его наследников")
         self.__products.append(product)
         Category.products_amount += product.quantity
 
@@ -105,3 +107,43 @@ class CategoryIterator:
             return self.category.products_list[self.index]
         else:
             raise StopIteration
+
+
+class Smartphone(Product):
+    """Класс, представляющий смартфон, наследуется от класса Product."""
+
+    def __init__(
+        self,
+        name: str,
+        description: str,
+        price: float,
+        quantity: int,
+        efficiency: float,
+        model: str,
+        memory: int,
+        color: str
+    ):
+        super().__init__(name, description, price, quantity)
+        self.efficiency = efficiency
+        self.model = model
+        self.memory = memory
+        self.color = color
+
+
+class LawnGrass(Product):
+    """Класс, представляющий газонную траву, наследуется от класса Product."""
+
+    def __init__(
+        self,
+        name: str,
+        description: str,
+        price: float,
+        quantity: int,
+        country: str,
+        germination_period: str,
+        color: str
+    ):
+        super().__init__(name, description, price, quantity)
+        self.country = country
+        self.germination_period = germination_period
+        self.color = color
