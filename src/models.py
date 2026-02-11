@@ -14,6 +14,14 @@ class BaseProduct(ABC):
         pass
 
 
+class BaseCategoryOrder(ABC):
+    """Абстрактный базовый класс для категорий и заказов."""
+
+    @abstractmethod
+    def __str__(self):
+        pass
+
+
 class MixinLogger:
     """Миксин для вывода в консоль информации о продукте."""
 
@@ -171,3 +179,19 @@ class LawnGrass(Product):
         self.country = country
         self.germination_period = germination_period
         self.color = color
+
+
+class Order:
+    """Класс, представляющий заказ."""
+
+    def __init__(self, product: Product, quantity: int):
+        self.product = product
+        self.quantity = quantity
+
+    def __str__(self) -> str:
+        return f"Заказ: {self.product.name}, количество: {self.quantity} шт., общая стоимость: {self.total_price} руб."
+
+    @property
+    def total_price(self) -> float:
+        """Метод для расчета общей стоимости заказа."""
+        return self.product.price * self.quantity

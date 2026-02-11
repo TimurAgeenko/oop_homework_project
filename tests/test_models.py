@@ -1,6 +1,6 @@
 import pytest
 
-from src.models import CategoryIterator, Product, Smartphone
+from src.models import CategoryIterator, Product, Smartphone, Order
 
 
 def test_product_initialization(product):
@@ -140,3 +140,11 @@ def test_lawn_grass_initialization(grass):
     assert grass.country == "Россия"
     assert grass.germination_period == "7 дней"
     assert grass.color == "Зеленый"
+
+
+def test_order_initialization(product):
+    order = Order(product, 2)
+    assert order.product == product
+    assert order.quantity == 2
+    assert order.total_price == 100000.0
+    assert str(order) == "Заказ: Laptop, количество: 2 шт., общая стоимость: 100000.0 руб."
