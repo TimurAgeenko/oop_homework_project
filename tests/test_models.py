@@ -1,6 +1,6 @@
 import pytest
 
-from src.models import CategoryIterator, Product
+from src.models import CategoryIterator, Product, Smartphone, Order
 
 
 def test_product_initialization(product):
@@ -56,6 +56,18 @@ def test_add_product_invalid_type(smartphone, grass):
         smartphone + grass
 
     assert str(exc_info.value) == "Сложение возможно только между продуктами одного типа"
+
+
+def test_mixin_logger(capsys):
+    Product("Laptop", "A high-end gaming laptop", 50000.00, 10)
+    captured = capsys.readouterr()
+    assert captured.out == "Product('Laptop', 'A high-end gaming laptop', 50000.0, 10)\n"
+
+    Smartphone(
+        "Samsung Galaxy S23 Ultra", "256GB, Серый цвет, 200MP камера", 180000.0, 5, 95.5, "S23 Ultra", 256, "Серый"
+    )
+    captured = capsys.readouterr()
+    assert captured.out == "Smartphone('Samsung Galaxy S23 Ultra', '256GB, Серый цвет, 200MP камера', 180000.0, 5)\n"
 
 
 def test_category_initialization(category):
@@ -128,3 +140,11 @@ def test_lawn_grass_initialization(grass):
     assert grass.country == "Россия"
     assert grass.germination_period == "7 дней"
     assert grass.color == "Зеленый"
+
+
+def test_order_initialization(product):
+    order = Order(product, 2)
+    assert order.product == product
+    assert order.quantity == 2
+    assert order.total_price == 100000.0
+    assert str(order) == "Заказ: Laptop, количество: 2 шт., общая стоимость: 100000.0 руб."

@@ -1,7 +1,38 @@
+from abc import ABC, abstractmethod
 from typing import Optional
 
 
-class Product:
+class BaseProduct(ABC):
+    """Абстрактный базовый класс для продуктов."""
+
+    @abstractmethod
+    def __str__(self):
+        pass
+
+    @abstractmethod
+    def __add__(self, other):
+        pass
+
+
+class BaseCategoryOrder(ABC):
+    """Абстрактный базовый класс для категорий и заказов."""
+
+    @abstractmethod
+    def __str__(self):
+        pass
+
+
+class MixinLogger:
+    """Миксин для вывода в консоль информации о продукте."""
+
+    def __init__(self):
+        print(repr(self))
+
+    def __repr__(self):
+        return f"{self.__class__.__name__}('{self.name}', '{self.description}', {self.price}, {self.quantity})"
+
+
+class Product(MixinLogger, BaseProduct):
     """Класс, представляющий продукт."""
 
     def __init__(self, name: str, description: str, price: float, quantity: int):
@@ -9,6 +40,7 @@ class Product:
         self.description = description
         self.__price = price
         self.quantity = quantity
+        super().__init__()
 
     def __str__(self) -> str:
         return f"{self.name}, {self.price} руб. Остаток: {self.quantity} шт."
@@ -147,3 +179,19 @@ class LawnGrass(Product):
         self.country = country
         self.germination_period = germination_period
         self.color = color
+
+
+class Order:
+    """Класс, представляющий заказ."""
+
+    def __init__(self, product: Product, quantity: int):
+        self.product = product
+        self.quantity = quantity
+
+    def __str__(self) -> str:
+        return f"Заказ: {self.product.name}, количество: {self.quantity} шт., общая стоимость: {self.total_price} руб."
+
+    @property
+    def total_price(self) -> float:
+        """Метод для расчета общей стоимости заказа."""
+        return self.product.price * self.quantity
