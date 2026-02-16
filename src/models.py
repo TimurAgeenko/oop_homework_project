@@ -125,6 +125,14 @@ class Category:
         """Свойство для получения списка продуктов в категории."""
         return self.__products
 
+    def middle_price(self):
+        """Метод для расчета средней цены продуктов в категории."""
+        try:
+            result = sum([product.price * product.quantity for product in self.__products]) / self.products_amount
+        except ZeroDivisionError:
+            result = 0.0
+        return round(result, 2)
+
 
 class CategoryIterator:
     """Итератор для перебора продуктов в категории."""
