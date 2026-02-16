@@ -9,6 +9,10 @@ def test_product_initialization(product):
     assert product.price == 50000.00
     assert product.quantity == 10
 
+def test_product_quantity_error():
+    with pytest.raises(ValueError, match="Товар с нулевым количеством не может быть добавлен"):
+        Product("Laptop", "A high-end gaming laptop", 50000.00, 0)
+
 
 def test_new_product():
     product_info = {"name": "Smartphone", "description": "Latest model smartphone", "price": 70000.00, "quantity": 15}
