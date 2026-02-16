@@ -1,6 +1,6 @@
 import pytest
 
-from src.models import CategoryIterator, Product, Smartphone, Order
+from src.models import CategoryIterator, Product, Smartphone, Order, Category
 
 
 def test_product_initialization(product):
@@ -8,6 +8,10 @@ def test_product_initialization(product):
     assert product.description == "A high-end gaming laptop"
     assert product.price == 50000.00
     assert product.quantity == 10
+
+def test_product_quantity_error():
+    with pytest.raises(ValueError, match="Товар с нулевым количеством не может быть добавлен"):
+        Product("Laptop", "A high-end gaming laptop", 50000.00, 0)
 
 
 def test_new_product():
@@ -111,6 +115,17 @@ def test_products_list(category):
     assert len(products_list) == 2
     assert products_list[0].name == "Laptop"
     assert products_list[1].name == "Mouse"
+
+
+def test_middle_price(category):
+    average_price = category.middle_price()
+    assert average_price == 26500.0
+
+
+def test_middle_price_empty_category():
+    empty_category = Category("Empty", "No products")
+    average_price = empty_category.middle_price()
+    assert average_price == 0.0
 
 
 def test_category_iterator(category):
