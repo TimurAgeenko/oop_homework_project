@@ -119,7 +119,7 @@ def test_products_list(category):
 
 def test_middle_price(category):
     average_price = category.middle_price()
-    assert average_price == 10833.33
+    assert average_price == 26500.0
 
 
 def test_middle_price_empty_category():

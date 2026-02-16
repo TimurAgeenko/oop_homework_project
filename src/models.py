@@ -128,10 +128,10 @@ class Category:
     def middle_price(self):
         """Метод для расчета средней цены продуктов в категории."""
         try:
-            result = sum([product.price * product.quantity for product in self.__products]) / self.products_amount
+            result = sum([product.price for product in self.__products]) / len(self.__products)
         except ZeroDivisionError:
             result = 0.0
-        return round(result, 2)
+        return result
 
 
 class CategoryIterator:
